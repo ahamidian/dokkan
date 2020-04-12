@@ -1,0 +1,24 @@
+version: "2"
+services:
+  nginx:
+    image: nginx:latest
+    ports:
+      - 80:80
+    volumes:
+      - ./django/public/static:/STATIC
+      - ./django/public/media:/MEDIA
+      - ./nginx:/etc/nginx/conf.d
+      - ./react/build:/var/www/react
+    depends_on:
+      - django
+      - react
+  django:
+    build: ./django
+    volumes:
+      - ./django:/dajngo
+    #    depends_on:
+#      - db
+  react:
+    build: ./react
+    volumes:
+      - ./react:/react

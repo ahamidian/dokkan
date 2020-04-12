@@ -1,0 +1,10 @@
+FROM node
+
+WORKDIR /react
+COPY package*.json /react
+
+RUN yarn
+RUN yarn build
+
+EXPOSE 3000
+CMD [ "npm", "start" ]
