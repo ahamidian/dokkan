@@ -1,11 +1,7 @@
 FROM node:alpine
-
-WORKDIR /react
-COPY package*.json /react
-
-RUN yarn
-COPY . .
-RUN yarn build
-
 EXPOSE 3000
-CMD [ "npm", "start" ]
+WORKDIR /react
+COPY . /react
+ENV PATH /app/node_modules/.bin:$PATH
+RUN yarn
+RUN yarn build
