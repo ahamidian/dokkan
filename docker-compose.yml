@@ -20,7 +20,7 @@ services:
 #      - db
   react:
     build: ./react
-    command: ["ls"]
+    command: ["ls","/node_modules"]
     volumes:
-      - ./react/node-modules:/react/node_modules
+      - ./react/node_modules:/react/node_modules
       - ./react:/react
