@@ -4,6 +4,7 @@ WORKDIR /react
 COPY package*.json /react
 
 RUN yarn
+COPY . .
 RUN yarn build
 
 EXPOSE 3000
