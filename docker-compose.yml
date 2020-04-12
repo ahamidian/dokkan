@@ -15,7 +15,7 @@ services:
   django:
     build: ./django
     volumes:
-      - ./django:/dajngo
+      - ./django:/taakmart
     #    depends_on:
 #      - db
   react:
