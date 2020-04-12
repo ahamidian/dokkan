@@ -1,6 +1,6 @@
 import requests
 import json
-import bs4
+# import bs4
 from main.models import Category, Product, Brand, Type
 
 
@@ -111,21 +111,21 @@ def get_all_products():
                     product.types.add(type)
 
 
-def get_all_brands():
-    for brand in Brand.objects.all():
-        print(brand.title)
-        res = requests.get("https://www.digikala.com/brand/" + brand.title.replace(" ", "-"))
-        soup = bs4.BeautifulSoup(res.text, "lxml")
-        elems = soup.select('.c-brand-description__text')
-        if len(elems) > 0:
-            brand.description = elems[0].get_text()
-
-        elems = soup.select('.c-brand-profile__avatar')
-        if len(elems) > 0:
-            brand.image = elems[0].get("style").replace("background-image: url(", "").replace(
-                "?x-oss-process=image/resize,m_lfit,h_300,w_300/quality,q_80)", "")
-
-        elems = soup.select('.c-brand-profile__username')
-        if len(elems) > 0:
-            brand.fa_title = elems[0].get_text()
-        brand.save()
+# def get_all_brands():
+#     for brand in Brand.objects.all():
+#         print(brand.title)
+#         res = requests.get("https://www.digikala.com/brand/" + brand.title.replace(" ", "-"))
+#         soup = bs4.BeautifulSoup(res.text, "lxml")
+#         elems = soup.select('.c-brand-description__text')
+#         if len(elems) > 0:
+#             brand.description = elems[0].get_text()
+#
+#         elems = soup.select('.c-brand-profile__avatar')
+#         if len(elems) > 0:
+#             brand.image = elems[0].get("style").replace("background-image: url(", "").replace(
+#                 "?x-oss-process=image/resize,m_lfit,h_300,w_300/quality,q_80)", "")
+#
+#         elems = soup.select('.c-brand-profile__username')
+#         if len(elems) > 0:
+#             brand.fa_title = elems[0].get_text()
+#         brand.save()
