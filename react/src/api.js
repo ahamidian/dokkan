@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 
-export const COMMON_API = 'http://127.0.0.1:8000/api/';
-export const DASHBOARD_API = 'http://127.0.0.1:8000/dashboard-api/';
+export const COMMON_API = 'http://dokkan.co/api/';
+export const DASHBOARD_API = 'http://dokkan.co/dashboard-api/';
 
 
 class Api {

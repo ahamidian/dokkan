@@ -1,4 +1,4 @@
-FROM python:3.7-alpine
+FROM python:3.7
 MAINTAINER Amirhossein
 ENV PYTHONUNBUFFERED 1
 WORKDIR /taakmart
