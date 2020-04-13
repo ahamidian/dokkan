@@ -1,0 +1,29 @@
+{
+  "files": {
+    "main.css": "/static/css/main.247fed09.chunk.css",
+    "main.js": "/static/js/main.8b268cd1.chunk.js",
+    "main.js.map": "/static/js/main.8b268cd1.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.b80794af.js",
+    "runtime-main.js.map": "/static/js/runtime-main.b80794af.js.map",
+    "static/css/2.42c91853.chunk.css": "/static/css/2.42c91853.chunk.css",
+    "static/js/2.5a74ca94.chunk.js": "/static/js/2.5a74ca94.chunk.js",
+    "static/js/2.5a74ca94.chunk.js.map": "/static/js/2.5a74ca94.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.cdac4b0db35c9bb7e9c03a8c8314d1e1.js": "/precache-manifest.cdac4b0db35c9bb7e9c03a8c8314d1e1.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.42c91853.chunk.css.map": "/static/css/2.42c91853.chunk.css.map",
+    "static/css/main.247fed09.chunk.css.map": "/static/css/main.247fed09.chunk.css.map",
+    "static/js/2.5a74ca94.chunk.js.LICENSE": "/static/js/2.5a74ca94.chunk.js.LICENSE",
+    "static/media/App.css": "/static/media/IRANSansWeb(FaNum)_UltraLight.f4aa344c.woff2",
+    "static/media/UploadIcon.svg": "/static/media/UploadIcon.1cedb6e9.svg",
+    "static/media/backg2.jpg": "/static/media/backg2.3e91397a.jpg",
+    "static/media/semantic.min.css": "/static/media/outline-icons.ef60a4f6.woff"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.b80794af.js",
+    "static/css/2.42c91853.chunk.css",
+    "static/js/2.5a74ca94.chunk.js",
+    "static/css/main.247fed09.chunk.css",
+    "static/js/main.8b268cd1.chunk.js"
+  ]
+}
