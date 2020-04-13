@@ -17,9 +17,9 @@ services:
       - ./django:/taakmart
     #    depends_on:
 #      - db
-  react:
-    image: node:alpine
-    command: sh entrypoint.sh
-    working_dir: /react
-    volumes:
-      - ./react/:/react
+  # react:
+  #   image: node:alpine
+  #   command: sh entrypoint.sh
+  #   working_dir: /react
+  #   volumes:
+  #     - ./react/:/react
