@@ -46,7 +46,7 @@ class IsAdminUserOrCompany(BasePermission):
 class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin,
                      DestroyModelMixin):
     queryset = Product.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUserOrCompany]
     serializer_class = ProductListSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     filterset_class = ProductFilter
