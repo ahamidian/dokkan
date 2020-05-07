@@ -1,21 +1,15 @@
-from django.db.models import F
-from django.db.models import Sum, Count
-from django.http import HttpResponse
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet, NumberFilter, BaseInFilter
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet, CharFilter
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, \
     DestroyModelMixin
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
-from dashboard.serializers import ProductSerializer, ProductListSerializer, CategorySerializer, CategoryListSerializer
+from dashboard.serializers import CategorySerializer, CategoryListSerializer
 from dashboard.viewsets.product_viewset import NumberInFilter
-from main.models import Category, Product, Slide, Brand, Type
-
-from main.services import get_categories, get_all_products
-from django_filters.rest_framework import DjangoFilterBackend, FilterSet, NumberFilter, BaseInFilter, CharFilter
+from main.models import Category
 
 
 class CategoryFilter(FilterSet):
@@ -30,7 +24,7 @@ class CategoryFilter(FilterSet):
 class CategoryiewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin,
                      DestroyModelMixin):
     queryset = Category.objects.all()
-    permission_classes = [AllowAny]
+    permission_classes = [IsAdminUser]
     serializer_class = CategoryListSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     search_fields = ['title']
@@ -45,6 +39,12 @@ class CategoryiewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateM
     @action(detail=False, methods=['get'])
     def meta_data(self, request):
         return Response({
+            "config": {
+                "editable": True,
+                "creatable": True,
+                "title": "دسته بندی ها",
+                "single_item": "دسته بندی",
+            },
             "columns": [
                 {
                     "label": "نام",

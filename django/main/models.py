@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import CASCADE, Max
 from django.utils import timezone
 from ordered_model.models import OrderedModel
+from simple_history.models import HistoricalRecords
 
 from accounting.models import Company
 
@@ -12,7 +13,9 @@ class Brand(models.Model):
     title = models.CharField(max_length=255)
     fa_title = models.CharField(max_length=255,null=True,blank=True)
     image = models.CharField(max_length=255,null=True,blank=True)
-    description = models.TextField(default="")
+    description = models.TextField(default="",null=True,blank=True)
+    owner = models.ForeignKey(Company,null=True,blank=True,on_delete=CASCADE)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title
@@ -27,6 +30,7 @@ class Category(models.Model):
     parent = models.ForeignKey('self', on_delete=CASCADE, null=True, blank=True)
     level = models.IntegerField(default=1)
     is_enable = models.BooleanField(default=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title
@@ -36,6 +40,7 @@ class Type(models.Model):
     title = models.CharField(max_length=255)
     search_value = models.IntegerField()
     category = models.ForeignKey(Category, on_delete=CASCADE, null=True, blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title
@@ -52,6 +57,7 @@ class Product(models.Model):
     parent = models.ForeignKey(Category, on_delete=CASCADE)
     created_on = models.DateTimeField(default=timezone.now)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title
@@ -64,6 +70,7 @@ class Slide(models.Model):
     external_link = models.CharField(max_length=255, null=True, blank=True)
     created_on = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title
@@ -73,10 +80,11 @@ class HomepageSegment(OrderedModel):
     title = models.CharField(max_length=255, null=True, blank=True)
     image = models.CharField(max_length=255, null=True, blank=True)
     query = models.CharField(max_length=255, null=True, blank=True)
-    products = models.ManyToManyField(Product, null=True, blank=True)
+    products = models.ManyToManyField(Product, blank=True)
     external_link = models.CharField(max_length=255, null=True, blank=True)
     created_on = models.DateTimeField(default=timezone.now)
     is_active = models.BooleanField(default=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return self.title

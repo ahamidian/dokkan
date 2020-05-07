@@ -5,17 +5,29 @@ from random import randint
 from django.utils import timezone
 from rest_framework import serializers
 from rest_framework.exceptions import ValidationError
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 from accounting.models import User
 
 
 class UserSerializer(ModelSerializer):
+    role = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ("username", "first_name", "last_name", "email", "password")
-        extra_kwargs = {'password': {'write_only': True}}
+        fields = ["username",
+                  "first_name",
+                  "last_name",
+                  "email",
+                  "role"]
+
+    def get_role(self, obj):
+        if obj.is_superuser:
+            return "admin"
+        if obj.is_company:
+            return "company"
+        return "seller"
 
 
 class UserGetCodeSerializer(serializers.Serializer):
@@ -48,3 +60,8 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         serializer = UserSerializer(instance=self.user)
         data['user'] = serializer.data
         return data
+
+
+class TableDataSerializer(Serializer):
+    day = serializers.DateTimeField()
+    value = serializers.IntegerField()

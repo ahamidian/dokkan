@@ -1,78 +1,59 @@
-import React, {useEffect, useState} from 'react';
-import Header from "./Header";
-import {Grid,Sidebar,Segment} from "semantic-ui-react";
-import LoginRequired from "./LoginRequired";
-import SideBar from "./SideBar";
-import {Route, Switch, Redirect} from "react-router-dom";
-import ModelPage from "./Common/ModelPage";
+import React from 'react';
+import Header from "./components/Header";
+import LoginRequired from "./components/LoginRequired";
+import {Redirect, Route, Switch} from "react-router-dom";
+import ModelPage from "./ModelPage/ModelPage";
+import Dashboard from "./Dashboard/Dashboard";
+import {makeStyles} from '@material-ui/core/styles';
+import MyDrawer from "./components/MyDrawer";
 
+
+const useStyles = makeStyles((theme) => ({
+    root: {
+        display: 'flex',
+    },
+    toolbar: theme.mixins.toolbar,
+    content: {
+        // direction: "rtl",
+        flexGrow: 1,
+        width:"100%",
+        padding: theme.spacing(2),
+    },
+}));
 
 export default function MainLayout({children}) {
+    const classes = useStyles();
 
-    const [isSideBarOpen, setSideBarOpen] = useState(window.innerWidth > 500);
-    const [width, setWidth] = useState(window.innerWidth);
-    let dynamicHeight = 'calc(100vh - 90px)';
+    const [mobileOpen, setMobileOpen] = React.useState(false);
 
-
-    useEffect(() => {
-        window.addEventListener('resize', handleWindowSizeChange);
-        return () => window.removeEventListener('resize', handleWindowSizeChange);
-    }, []);
-
-    function handleWindowSizeChange() {
-        if(width!==window.innerWidth){
-            setWidth(window.innerWidth);
-            if (window.innerWidth > 500) {
-                setSideBarOpen(true);
-            }else {
-                setSideBarOpen(false);
-            }
-        }
-    }
+    const handleDrawerToggle = () => {
+        setMobileOpen(!mobileOpen);
+    };
 
     return (
         <LoginRequired>
-            <Sidebar.Pushable>
-                <SideBar visible={isSideBarOpen} setVisible={setSideBarOpen} width={width}/>
-
-                <Sidebar.Pusher dimmed={isSideBarOpen&&width<500}>
-                    <Grid columns="equal" style={{margin: "0"}}>
-                        <Grid.Row style={{padding: "0"}}>
-                            <Header onMenuTogglerClick={() => setSideBarOpen(!isSideBarOpen)}
-                                    paddingRight={isSideBarOpen && width > 500 ? "260px" : "0px"}/>
-                        </Grid.Row>
-                        <Grid.Row style={{padding: "0"}}>
-
-                            <div style={{
-                                backgroundColor: "#e2e2e2",
-                                marginRight: isSideBarOpen && width > 500 ? "260px" : "0px",
-                                height: dynamicHeight,
-                                overflowY: "auto",
-                                width: "100%"
-                            }}
-                                 className={`shooka-pusher ${width>500?"p-4":"p-2"}`}>
-
-                                <Switch>
-                                    <Route exact path="/dashboard">
-                                       <Redirect to="/dashboard/home" />
-                                    </Route>
-
-
-                                    <Route path="/dashboard/:path" name="base Page">
-                                        <ModelPage/>
-                                    </Route>
-
-                                </Switch>
-                            </div>
-                        </Grid.Row>
-                    </Grid>
-                </Sidebar.Pusher>
-            </Sidebar.Pushable>
-
-
-
+            <div className={classes.root}>
+                <Header onMenuTogglerClick={handleDrawerToggle}/>
+                <MyDrawer mobileOpen={mobileOpen} handleDrawerToggle={handleDrawerToggle}/>
+                <main className={classes.content}>
+                    <div className={classes.toolbar}/>
+                    <Switch>
+                        <Route exact path="/">
+                            <Redirect to="/dashboard/home"/>
+                        </Route>
+                        <Route exact path="/dashboard">
+                            <Redirect to="/dashboard/home"/>
+                        </Route>
+                        <Route exact path="/dashboard/home">
+                            <Dashboard/>
+                        </Route>
+                        <Route path="/dashboard/:path">
+                            <ModelPage/>
+                        </Route>
+                    </Switch>
+                </main>
+            </div>
         </LoginRequired>
-
     );
 
 }

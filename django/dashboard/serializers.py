@@ -43,7 +43,7 @@ class BrandSerializer(ModelSerializer):
         model = Brand
         fields = (
             'title',
-            'id',
+            'pk',
         )
 
 
@@ -65,7 +65,7 @@ class ProductListSerializer(ModelSerializer):
         ]
 
     def get_brand(self, obj):
-        return obj.brand.title
+        return obj.brand.fa_title
 
     def get_parent(self, obj):
         return obj.parent.title
@@ -92,7 +92,7 @@ class TypeSerializer(ModelSerializer):
         model = Type
         fields = (
             'title',
-            'id',
+            'pk',
         )
 
 
@@ -211,15 +211,46 @@ class CompanySerializer(ModelSerializer):
         return super(CompanySerializer, self).update(instance, validated_data)
 
 
-class OrderLineSerializer(ModelSerializer):
+class OrderLineSerializerForOrderSerializer(ModelSerializer):
     class Meta:
         model = OrderLine
         fields = (
-            'id',
+            'pk',
             "amount",
             "price",
             "product",
         )
+
+class OrderLineSerializer(ModelSerializer):
+    owner = serializers.SerializerMethodField()
+    created_on = serializers.SerializerMethodField()
+    status = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
+
+    class Meta:
+        model = OrderLine
+        fields = (
+            'pk',
+            "amount",
+            "price",
+            "product",
+            "owner",
+            "created_on",
+            "status",
+        )
+
+    def get_owner(self, obj):
+        return obj.order.owner.user.username
+
+    def get_product(self, obj):
+        return obj.product.title
+
+    def get_created_on(self, obj):
+        return obj.order.created_on
+
+    def get_status(self, obj):
+        return obj.order.status
+
 
 
 class CreateOrderLineSerializer(Serializer):
@@ -254,7 +285,7 @@ class OrderListSerializer(ModelSerializer):
 
 
 class OrderRetrieveSerializer(ModelSerializer):
-    lines = OrderLineSerializer(many=True)
+    lines = OrderLineSerializerForOrderSerializer(many=True)
 
     class Meta:
         model = Order
@@ -310,3 +341,6 @@ class OrderSerializer(ModelSerializer):
                 order_line.save()
 
         return super(OrderSerializer, self).update(instance, validated_data)
+
+
+

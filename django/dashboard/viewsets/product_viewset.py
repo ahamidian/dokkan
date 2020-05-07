@@ -1,19 +1,18 @@
-from django.db.models import F
-from django.db.models import Sum, Count
+import csv
+from http.client import HTTPResponse
+
 from django.http import HttpResponse
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, NumberFilter, BaseInFilter, CharFilter
 from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.mixins import ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin, \
     DestroyModelMixin
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import BasePermission, AllowAny
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
 
 from dashboard.serializers import ProductSerializer, ProductListSerializer
-from main.models import Category, Product, Slide, Brand, Type
-
-from main.services import get_categories, get_all_products
+from main.models import Category, Product, Brand
 
 
 class NumberInFilter(BaseInFilter, NumberFilter):
@@ -33,9 +32,20 @@ class ProductFilter(FilterSet):
         fields = ['title', 'parent', "brand", "type", "min_price", "max_price"]
 
 
+class IsAdminUserOrCompany(BasePermission):
+
+    def has_permission(self, request, view):
+        return bool(request.user and (request.user.is_superuser or request.user.is_company))
+
+    def has_object_permission(self, request, view, obj):
+        if request.user and request.user.is_superuser:
+            return True
+        return obj.brand.title == "Mihan"
+
+
 class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateModelMixin, UpdateModelMixin,
                      DestroyModelMixin):
-    queryset = Product.objects.all().filter(existStatus=1)
+    queryset = Product.objects.all()
     permission_classes = [AllowAny]
     serializer_class = ProductListSerializer
     filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
@@ -48,9 +58,51 @@ class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateM
             return ProductSerializer
         return self.serializer_class
 
+    def get_queryset(self):
+        # if self.request.user.is_superuser:
+            return self.queryset.all()
+        # return self.queryset.filter(brand__owner=self.request.user.company).all()
+
+    def get_permitted_brands(self):
+        if self.request.user.is_superuser:
+            brands = Brand.objects.all()
+        else:
+            brands = Brand.objects.filter(owner=self.request.user.company).all()
+        return [{"value": brand.id, "label": brand.fa_title} for brand in brands]
+
+    def get_permitted_categories(self):
+        return [{"value": category.id, "label": category.title} for category in
+                Category.objects.filter(is_leaf=True).all()]
+
+    @action(detail=False, methods=['get'])
+    def export_csv(self, request):
+        queryset = self.get_queryset()
+        response = HttpResponse(content_type="text/csv")
+        writer = csv.writer(response)
+        writer.writerow(
+            ["title", "price", "discounted_price", "image", "existStatus", "brand", "parent", "created_on",
+             "company"])
+
+        for item in queryset.values_list("title", "price", "discounted_price", "image", "existStatus", "brand__title",
+                                         "parent__title", "created_on",
+                                         "company__name"):
+            writer.writerow(item)
+
+        response['Content-Disposition'] = 'attachment; filename=products.csv'
+        return response
+
     @action(detail=False, methods=['get'])
     def meta_data(self, request):
+        brand_filter_options = [{"value": "", "label": "همه"}] + self.get_permitted_brands()
+        cat_filter_options = [{"value": "", "label": "همه"}] + self.get_permitted_categories()
+
         return Response({
+            "config": {
+                "editable": True,
+                "creatable": True,
+                "title": "محصولات",
+                "single_item": "کالا",
+            },
             "columns": [
                 {
                     "label": "نام",
@@ -94,14 +146,12 @@ class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateM
                 }, {
                     "label": "برند",
                     "type": "select",
-                    "options": [{"value": brand.id, "label": brand.title} for brand in
-                                Brand.objects.all()],
+                    "options": self.get_permitted_brands(),
                     "name": "brand"
                 }, {
                     "label": "دسته بندی",
                     "type": "select",
-                    "options": [{"value": category.id, "label": category.title} for category in
-                                Category.objects.filter(is_leaf=True)],
+                    "options": self.get_permitted_categories(),
                     "name": "parent"
                 }, {
                     "label": "تصویر",
@@ -117,23 +167,14 @@ class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateM
                 }, {
                     "label": "برند",
                     "type": "select",
-                    "options": [{"value": brand.id, "label": brand.title} for brand in
-                                Brand.objects.all()],
+                    "options": brand_filter_options,
+                    "default": brand_filter_options[0],
                     "name": "brand"
-                }, {
-                    "label": "وضعیت",
-                    "type": "select",
-                    "options": [
-                        {"value": 1, "label": 'existed'},
-                        {"value": 2, "label": 'coming soon'},
-                        {"value": 3, "label": 'out of stock'},
-                    ],
-                    "name": "existStatus"
                 }, {
                     "label": "دسته بندی",
                     "type": "select",
-                    "options": [{"value": category.id, "label": category.title} for category in
-                                Category.objects.filter(is_leaf=True)],
+                    "options": cat_filter_options,
+                    "default": cat_filter_options[0],
                     "name": "parent"
                 },
             ],
@@ -150,16 +191,14 @@ class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateM
                 }, {
                     "label": "برند",
                     "type": "select",
-                    "options": [{"value": brand.id, "label": brand.title} for brand in
-                                Brand.objects.all()],
+                    "options": self.get_permitted_brands(),
                     "name": "brand"
                 }, {
                     "label": "دسته بندی",
                     "type": "select",
-                    "options": [{"value": category.id, "label": category.title} for category in
-                                Category.objects.filter(is_leaf=True)],
+                    "options": self.get_permitted_categories(),
                     "name": "parent"
                 },
             ]
-    
+
         })

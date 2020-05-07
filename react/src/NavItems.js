@@ -1,40 +1,55 @@
 import React from 'react';
-
+import DashboardOutlinedIcon from '@material-ui/icons/DashboardOutlined';
+import LocalMallOutlinedIcon from '@material-ui/icons/LocalMallOutlined';
+import WidgetsOutlinedIcon from '@material-ui/icons/WidgetsOutlined';
+import ShoppingCartOutlinedIcon from '@material-ui/icons/ShoppingCartOutlined';
+import PeopleAltOutlinedIcon from '@material-ui/icons/PeopleAltOutlined';
+import BusinessOutlinedIcon from '@material-ui/icons/BusinessOutlined';
 
 export const navItems = [
     {
         name: 'داشبورد',
         url: '/dashboard/home',
-        icon: 'home',
+        icon: <DashboardOutlinedIcon/>,
     },
     {
         name: 'محصولات',
         url: '/dashboard/products',
-        icon: 'coffee',
+        icon: <LocalMallOutlinedIcon/>,
         singleName: 'product'
     },
     {
         name: 'دسته بندی ها',
         url: '/dashboard/categories',
-        icon: 'sitemap',
-        singleName: 'category'
+        icon: <WidgetsOutlinedIcon/>,
+        singleName: 'category',
+        adminOnly:true,
+    },
+    {
+        name: 'سبد های خرید',
+        url: '/dashboard/orders',
+        icon: <ShoppingCartOutlinedIcon/>,
+        singleName: 'order',
+        adminOnly:true,
     },
     {
         name: 'سفارش ها',
-        url: '/dashboard/orders',
-        icon: 'shopping cart',
-        singleName: 'order'
+        url: '/dashboard/orderLines',
+        icon: <ShoppingCartOutlinedIcon/>,
+        singleName: 'orderLine',
     },
     {
         name: 'خریداران',
         url: '/dashboard/sellers',
-        icon: 'users',
-        singleName: 'seller'
+        icon: <PeopleAltOutlinedIcon/>,
+        singleName: 'seller',
+        adminOnly:true,
     },
     {
         name: 'شرکت ها',
         url: '/dashboard/companies',
-        icon: 'user secret',
-        singleName: 'company'
+        icon: <BusinessOutlinedIcon/>,
+        singleName: 'company',
+        adminOnly:true,
     }
 ];

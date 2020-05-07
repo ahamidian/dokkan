@@ -22,7 +22,8 @@ from rest_framework_simplejwt.views import (
 from django.apps import apps
 
 from accounting.views import MyTokenObtainPairView, UserViewSet
-from dashboard.viewsets import product_viewset, category_viewset, seller_viewset, company_viewset, order_viewset
+from dashboard.urls import dashboard_router
+from dashboard.views import dashboard_data
 from main.views import ProductViewSet, initial_data, BrandViewSet
 from shopping.views import OrderViewSet
 
@@ -33,20 +34,14 @@ router.register(r'send_code', UserViewSet, base_name='send_code')
 router.register(r'order', OrderViewSet, base_name='order')
 
 
-dashboard_router = routers.DefaultRouter()
-dashboard_router.register(r'products', product_viewset.ProductViewSet, base_name='products')
-dashboard_router.register(r'categories', category_viewset.CategoryiewSet, base_name='categories')
-dashboard_router.register(r'sellers', seller_viewset.SellerViewSet, base_name='categories')
-dashboard_router.register(r'companies', company_viewset.CompanyViewSet, base_name='categories')
-dashboard_router.register(r'orders', order_viewset.OrderViewSet, base_name='categories')
-
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/initial_data/', initial_data, name='initial_data'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('api/token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
-    path('api/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('api/dashboard/dashboard-data', dashboard_data),
+    path('api/dashboard/', include(dashboard_router.urls)),
     path('api/', include(router.urls)),
-    path('dashboard-api/', include(dashboard_router.urls)),
 
 ]

@@ -1,18 +1,12 @@
-from django.urls import path, include
+from dashboard.viewsets import product_viewset, category_viewset, seller_viewset, company_viewset, order_viewset, \
+    orderline_viewset
+from rest_framework import routers
 
-from dashboard.views import *
 
-urlpatterns = [
-    path('', dashboard, name="dashboard"),
-    path('sellers/create', SellerCreateView.as_view(), name="create_seller"),
-    path('sellers', seller_list, name="sellers"),
-    path('companies/create', CompanyCreateView.as_view(), name="create_company"),
-    path('companies', company_list, name="companies"),
-
-    path('products/', ProductListView.as_view(), name='product_list'),
-    # path('products/view/<int:pk>',product_view, name='product_view'),
-    path('products/create', ProductCreateView.as_view(), name='product_new'),
-    # path('products/edit/<int:pk>', product_update, name='product_edit'),
-    # path('products/delete/<int:pk>', product_delete, name='product_delete'),
-    # path('product/', include(ProductView().get_urls()))
-]
+dashboard_router = routers.DefaultRouter()
+dashboard_router.register(r'products', product_viewset.ProductViewSet, base_name='products')
+dashboard_router.register(r'categories', category_viewset.CategoryiewSet, base_name='categories')
+dashboard_router.register(r'sellers', seller_viewset.SellerViewSet, base_name='categories')
+dashboard_router.register(r'companies', company_viewset.CompanyViewSet, base_name='categories')
+dashboard_router.register(r'orders', order_viewset.OrderViewSet, base_name='categories')
+dashboard_router.register(r'orderLines', orderline_viewset.OrderLineViewSet, base_name='categories')

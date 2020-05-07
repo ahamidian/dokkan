@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import register
 from ordered_model.admin import OrderedModelAdmin
+from simple_history.admin import SimpleHistoryAdmin
 
 from main.models import Category, Brand, Product, Type, Slide, HomepageSegment
 
@@ -17,12 +18,12 @@ class BrandAdmin(admin.ModelAdmin):
 
 
 @register(Product)
-class CategoryAdmin(admin.ModelAdmin):
+class ProductAdmin(admin.ModelAdmin):
     list_display = ['title', "parent", "brand", "existStatus"]
 
 
 @register(Type)
-class CategoryAdmin(admin.ModelAdmin):
+class TypeAdmin(admin.ModelAdmin):
     list_display = ['title']
 
 
@@ -32,5 +33,5 @@ class SlideAdmin(admin.ModelAdmin):
 
 
 @register(HomepageSegment)
-class HomepageSegmentAdmin(OrderedModelAdmin):
+class HomepageSegmentAdmin(OrderedModelAdmin,SimpleHistoryAdmin):
     list_display = ['title', "image", "query", "external_link", "created_on", "is_active",'move_up_down_links']

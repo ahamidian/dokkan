@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import CASCADE
 from django.utils import timezone
+from simple_history.models import HistoricalRecords
 
 from accounting.models import User, Seller
 from main.models import Product
@@ -29,7 +30,7 @@ class Order(models.Model):
     description = models.TextField(null=True, blank=True)
     code = models.IntegerField(unique=True, null=True, blank=True)
     is_active = models.BooleanField(default=True)
-
+    history = HistoricalRecords()
     # def get_sum(self):
     #     price = 0
     #     for order_stuff in self.order_set.all():
@@ -42,3 +43,4 @@ class OrderLine(models.Model):
     product = models.ForeignKey(Product, on_delete=CASCADE)
     amount = models.PositiveIntegerField(default=1)
     price = models.PositiveIntegerField()
+    history = HistoricalRecords()
