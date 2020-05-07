@@ -59,9 +59,9 @@ class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin, CreateM
         return self.serializer_class
 
     def get_queryset(self):
-        # if self.request.user.is_superuser:
+        if self.request.user.is_superuser:
             return self.queryset.all()
-        # return self.queryset.filter(brand__owner=self.request.user.company).all()
+        return self.queryset.filter(brand__owner=self.request.user.company).all()
 
     def get_permitted_brands(self):
         if self.request.user.is_superuser:
