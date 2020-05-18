@@ -94,7 +94,7 @@ class ProductViewSet(GenericViewSet, ListModelMixin, RetrieveModelMixin):
         if brands_queryset.count() > 1:
             filters.append(
                 {"type": "brand", "title": "برند", "items": BrandSerializer(brands_queryset, many=True).data})
-        if brands_queryset.count() > 1:
+        if types_queryset.count() > 1:
             filters.append(
                 {"type": "type", "title": "نوع", "items": TypeSerializer(types_queryset, many=True).data})
 

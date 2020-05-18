@@ -34,13 +34,18 @@ class CategorySerializer(ModelSerializer):
 
 
 class BrandSerializer(ModelSerializer):
+    title = serializers.SerializerMethodField()
+
     class Meta:
         model = Brand
         fields = [
             'title',
-            'fa_title',
             'id',
         ]
+
+    def get_title(self, obj):
+        return obj.fa_title
+
 
 class BrandDetailSerializer(ModelSerializer):
     class Meta:
