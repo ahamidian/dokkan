@@ -5,7 +5,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/    
     env_file:
-      - ./.env
+      - ./django/.env
   nginx:
     image: nginx:latest
     restart: always 
@@ -23,7 +23,7 @@ services:
     volumes:
       - ./django:/taakmart
     env_file:
-      - ./.env
+      - ./django/.env
     depends_on:
       - db
 
