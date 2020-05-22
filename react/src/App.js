@@ -1,14 +1,16 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import './App.css';
-import Login from "./pages/Login/Login";
-import MainLayout from "./pages/dashboard/MainLayout";
+import Login from "./apps/dashboard/Login/Login";
+import DashboardMainLayout from "./apps/dashboard/DashboardMainLayout";
 import {create} from 'jss';
 import rtl from 'jss-rtl';
 import {createMuiTheme, ThemeProvider, jssPreset, StylesProvider} from '@material-ui/core/styles';
 import {PRIMARY_COLOR} from "./constants";
 import {SnackbarProvider} from "notistack";
 import Grow from '@material-ui/core/Grow';
+import LandingPage from "./apps/landingPage/LandingPage";
+import ShopMainLayout from "./apps/shop/ShopMainLayout";
 
 const jss = create({plugins: [...jssPreset().plugins, rtl()]});
 
@@ -33,9 +35,10 @@ function App() {
                 <Router>
                     <SnackbarProvider maxSnack={1} TransitionComponent={Grow}   anchorOrigin={{vertical: 'bottom', horizontal: 'right',}}>
                         <Switch>
-                            <Route exact path="/login" name="Login Page" component={Login}/>
-                            <Route exact path="" name="dashboard" component={MainLayout}/>
-                            <Route path="/dashboard" name="dashboard" component={MainLayout}/>
+                            <Route exact path="/" name="Landing page" component={LandingPage}/>
+                            <Route exact path="/dashboard/login" name="Login Page" component={Login}/>
+                            <Route path="/dashboard" name="dashboard" component={DashboardMainLayout}/>
+                            <Route path="/shop" name="market" component={ShopMainLayout}/>
                         </Switch>
                     </SnackbarProvider>
                 </Router>

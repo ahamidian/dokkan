@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link, useHistory} from 'react-router-dom'
-import img from "../../../typo.png"
-import {navItems} from '../../../NavItems'
+import img from "../../typo.png"
+import {navItems} from '../../NavItems'
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";

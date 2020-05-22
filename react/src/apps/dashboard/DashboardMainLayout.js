@@ -1,11 +1,11 @@
 import React from 'react';
-import Header from "./components/Header";
-import LoginRequired from "./components/LoginRequired";
+import Header from "./Header";
+import LoginRequired from "./LoginRequired";
 import {Redirect, Route, Switch} from "react-router-dom";
 import ModelPage from "./ModelPage/ModelPage";
 import Dashboard from "./Dashboard/Dashboard";
 import {makeStyles} from '@material-ui/core/styles';
-import MyDrawer from "./components/MyDrawer";
+import MyDrawer from "./MyDrawer";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function MainLayout({children}) {
+export default function DashboardMainLayout({children}) {
     const classes = useStyles();
 
     const [mobileOpen, setMobileOpen] = React.useState(false);

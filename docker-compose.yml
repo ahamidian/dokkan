@@ -1,5 +1,11 @@
 version: "2"
 services:
+  db:
+    image: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/    
+    env_file:
+      - ./.env
   nginx:
     image: nginx:latest
     restart: always 
@@ -16,8 +22,14 @@ services:
     build: ./django
     volumes:
       - ./django:/taakmart
-    #    depends_on:
-#      - db
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
+
   # react:
   #   image: node:alpine
   #   command: sh entrypoint.sh
