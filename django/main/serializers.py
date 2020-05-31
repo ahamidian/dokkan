@@ -72,7 +72,6 @@ class TypeSerializer(ModelSerializer):
 class ProductSerializer(ModelSerializer):
     # img = serializers.SerializerMethodField()
     brand = BrandSerializer(many=False)
-    sum= serializers.SerializerMethodField()
 
     class Meta:
         model = Product
@@ -86,15 +85,7 @@ class ProductSerializer(ModelSerializer):
             "brand",
             # "types",
             "parent",
-            "sum",
         ]
-
-    def get_sum(self, obj):
-        sum =0
-        for o in OrderLine.objects.filter(product_id=obj.id):
-            sum=sum+o.amount
-        return sum
-
     # def get_img(self, obj):
     #     if obj.img:
     #         return "http://192.168.1.8:8000" + obj.img.url
