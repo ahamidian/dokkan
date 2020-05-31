@@ -38,9 +38,9 @@ class ProductOrdering(OrderingFilter):
         if ordering:
             print(ordering)
             if "bestSelling" in ordering:
-                return queryset.annotate(sum=Sum('orderline__amount')).order_by('-sum').distinct('sum')
+                return queryset.annotate(sum=Sum('orderline__amount')).order_by('-sum','id').distinct()
             if "mostDiscounted" in ordering:
-                return queryset.annotate(dp=(F('price') - F('discounted_price'))/F('price')).order_by('-dp').distinct('dp')
+                return queryset.annotate(dp=(F('price') - F('discounted_price'))/F('price')).order_by('-dp').distinct()
             else:
                 return queryset.order_by(*ordering)
 
